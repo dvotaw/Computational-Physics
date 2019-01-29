@@ -13,6 +13,15 @@
 //  
 //************************************************************************
 
+/// Answers to questions: ///
+/*
+  When the relative error is close to 1, it means that one or both of the recursion methods is failing horribly.
+  By comparison with the GSL function, up recursion is failing for x < 2, and down recursion is failing for x > 40.
+  Between x = 2 and x = 10, the error appears to obey a power law with a negative slope.
+  From x = 10 until about x = 30, the error is on the same order of magnitude as the machine precision for doubles.
+  From x = 30 until about x = 40, the error appears to obey a different power law, now with a positive slope.
+*/
+
 // Header files.
 #include <iostream>            // For cout.
 #include <iomanip>             // For setwidth() and setprecision().
