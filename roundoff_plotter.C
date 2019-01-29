@@ -27,7 +27,9 @@ void roundoff_plotter(void)
   g->GetYaxis()->CenterTitle();
   g->Draw("AC*");
   g->SetMarkerStyle(20);
-  g->SetLineColor(kRed);
+  g->SetLineColor(kBlue);
+
+  g->Fit("pol1", "", "", 4, 7);
 
   c->Print("roundoff.pdf", "pdf");
 }
