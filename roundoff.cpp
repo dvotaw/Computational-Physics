@@ -20,7 +20,8 @@
 
 using namespace std;
 
-float sum_up(int N)
+// Function for summing up.
+inline float sum_up(int N)
 {
   float sum = 0.;
   for(int i = 1; i <= N; i++)
@@ -30,7 +31,8 @@ float sum_up(int N)
   return sum;
 }
 
-float sum_down(int N)
+// Function for summing down.
+inline float sum_down(int N)
 {
   float sum = 0.;
   for(int i = N; i >= 1; i--)
@@ -42,24 +44,33 @@ float sum_down(int N)
 
 int main()
 {
-  float upsum, downsum, diff;
+  // Define some floats. "upsum" and "downsum" will hold results of summing up and down. "relative_error" will be the relative error.
+  float upsum, downsum, relative_error;
 
+  // Output file.
   ofstream outfile;
   outfile.open("roundoff_output.txt", ios::out);
 
+  // Loop over many values of N.
   for(int n = 100; n <= 1e8; n *= 2)
   {
+    // Sum up.
     upsum = sum_up(n);
+    // Sum down.
     downsum = sum_down(n);
 
-    diff = fabs(upsum - downsum) / (0.5 * (fabs(upsum) + fabs(downsum)));
+    // Calculate the relative error.
+    relative_error = fabs(upsum - downsum) / (0.5 * (fabs(upsum) + fabs(downsum)));
 
+    // Print to screen.
     cout << setprecision(20) << "\nN = " << n << ", Up sum = " << upsum << ", Down sum = " << downsum << ".";
 
-    outfile << setprecision(20) << log10(n) << " " << log10f(diff) << "\n";
+    // Write to file.
+    outfile << setprecision(20) << log10(n) << " " << log10f(relative_error) << "\n";
   }
 
   cout << endl;
+  // Close output file.
   outfile.close();
 
   return 0;
