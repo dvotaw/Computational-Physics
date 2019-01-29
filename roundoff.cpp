@@ -52,7 +52,7 @@ int main()
   outfile.open("roundoff_output.txt", ios::out);
 
   // Loop over many values of N.
-  for(int n = 100; n <= 1e8; n *= 2)
+  for(int n = 100; n <= 1e9; n *= 2)
   {
     // Sum up.
     upsum = sum_up(n);

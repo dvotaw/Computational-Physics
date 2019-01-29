@@ -8,7 +8,9 @@
 //      28-Jan-2019  Written from scratch.
 //
 //  Notes:  
-//   * Does not need to be compiled. Run in ROOT.
+//   * Does not need to be compiled. Run in ROOT, from command line:
+//
+//     	root -l roundoff_plotter.C
 //
 //*********************************************************************//
 
@@ -24,4 +26,8 @@ void roundoff_plotter(void)
   g->GetYaxis()->SetTitle("log_{10}(#epsilon_{rel})");
   g->GetYaxis()->CenterTitle();
   g->Draw("AC*");
+  g->SetMarkerStyle(20);
+  g->SetLineColor(kRed);
+
+  c->Print("roundoff.pdf", "pdf");
 }
