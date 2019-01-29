@@ -37,12 +37,12 @@ double down_recursion(double x, int n, int m)
 {
   double j[start + 2];
   j[m + 1] = j[m] = 1.;	
-  for (int k = m; k > 0; k--)
+  for(int k = m; k > 0; k--)
   {
     j[k - 1] = ((2. * double(k) + 1.) / x) * j[k] - j[k + 1];
   }
   double scale = (sin(x) / x) / j[0];
-  return j[n] * scale;
+  return (j[n] * scale);
 }
 
 // Up recursion function.
@@ -51,7 +51,7 @@ double up_recursion(double x, int n)
   double term_three = 0.;
   double term_one = sin(x) / x; 
   double term_two = (sin(x) - x * cos(x)) / (x * x);
-  for (int k = 1; k < n; k += 1)
+  for(int k = 1; k < n; k++)
   {
     term_three = ((2. * double(k) + 1.) / x) * term_two - term_one;	       
     term_one = term_two;
@@ -62,27 +62,34 @@ double up_recursion(double x, int n)
 
 int main()
 {
+  // Define some doubles to hold the values of the Bessel function using 3 different methods, and the relative error between the up and down methods.
   double ans_down, ans_up, relative_error, ans_gsl;
 
   // Create an output file.
   ofstream my_out("bessel.dat");
 
-  my_out << "# Spherical Bessel functions via up and down recursion\n"; 
+  // Write a description line to the output file.
+  my_out << "# Spherical Bessel functions via up and down recursion, relative error, and function from GSL\n"; 
 
   // Step over x values.
   for(double x = xmin; x <= xmax; x += step)
   {
+    // Calculate J(x) using down recursion.
     ans_down = down_recursion(x, order, start);
+    // Calculate J(x) using up recursion.
     ans_up = up_recursion(x, order);
-    relative_error = fabs(ans_up - ans_down)/(fabs(ans_up) + fabs(ans_down));
+    // Calculate relative error between up and down methods.
+    relative_error = fabs(ans_up - ans_down) / (fabs(ans_up) + fabs(ans_down));
+    // Get the value of J(x) from the GSL function.
     ans_gsl = gsl_sf_bessel_jl(order, x);
 
-    my_out << fixed << setprecision(15) << setw(18) << x << " "
-    << scientific << setprecision(15)
-    << setw(18) << ans_down << " "
-    << setw(18) << ans_up << " "
-    << setw(18) << relative_error << " "
-    << setw(18) << ans_gsl
+    // Write everything to file.
+    my_out << fixed << setprecision(10) << setw(13) << x << " "
+    << scientific << setprecision(10)
+    << setw(13) << ans_down << " "
+    << setw(13) << ans_up << " "
+    << setw(13) << relative_error << " "
+    << setw(13) << ans_gsl
     << endl;
   }
   cout << "\nData stored in bessel.dat.\n\n";
