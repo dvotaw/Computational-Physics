@@ -1,0 +1,37 @@
+
+
+*******************************************************************************
+Fri Feb  8 09:04:57 2019
+
+
+FIT:    data read from "roundoff_output.txt" using ($1):($2)
+        format = x:z
+        x range restricted to [4.00000 : 7.00000]
+        #datapoints = 10
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f1(x)
+	f1(x) = a1*x + b1
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a1            b1           
+   0 1.0723207403e+03   0.00e+00  3.97e+00    1.000000e+00   1.000000e+00
+   5 8.5386495248e-01  -2.03e-07  3.97e-05    1.975781e+00  -1.464629e+01
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 0.853865
+rel. change during last iteration : -2.03421e-12
+
+degrees of freedom    (FIT_NDF)                        : 8
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.3267
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.106733
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a1              = 1.97578          +/- 0.1195       (6.047%)
+b1              = -14.6463         +/- 0.6607       (4.511%)
+
+correlation matrix of the fit parameters:
+                a1     b1     
+a1              1.000 
+b1             -0.988  1.000 
