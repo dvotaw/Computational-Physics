@@ -34,7 +34,7 @@ MOREFLAGS= -Wpedantic -Wpointer-arith -Wcast-qual -Wcast-align \
            -Wwrite-strings -fshort-enums 
 
 # Libraries and linking.
-LIBS=           
+LIBS=       
 LDFLAGS= -lgsl -lgslcblas 
  
 all:    $(COMMAND) 

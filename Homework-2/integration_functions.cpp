@@ -81,5 +81,8 @@ double GSL_integration(int Npts, double xmin, double xmax, double (*integrand)(d
 
   gsl_integration_qags(&my_func, xmin, xmax, abs_error, rel_error, Npts, work_ptr, &result, &error);
 
+
+  gsl_integration_workspace_free(work_ptr);
+
   return result;
 }

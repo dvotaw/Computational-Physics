@@ -21,22 +21,39 @@ using namespace std;
 
 double integrand(double x);
 double integrand_with_params(double x, void* params);
+double exact_antiderivative(double x);
 
 int main()
 {
-  const int Npts = 100;
+  const int max = 1e8;
+  int Npts;
   const double xmin = 0.;
   const double xmax = 1.;
-  double result;
+  double result, exact;
 
-  result = Simpson(Npts, xmin, xmax, &integrand);
-  cout << endl << result;
+  exact = exact_antiderivative(xmax) - exact_antiderivative(xmin);
 
-  result = Milne(Npts, xmin, xmax, &integrand);
-  cout << endl << result;
+  ofstream outfile;
+  outfile.open("integration_results.txt");
 
-  result = GSL_integration(Npts, xmin, xmax, &integrand_with_params);
-  cout << endl << result;
+  for(Npts = 11; Npts < max; Npts *= 11)
+  {
+    cout << " Starting " << Npts << " points...\n";
+    outfile << scientific << setprecision(20) << log10(Npts);
+
+    result = Simpson(Npts, xmin, xmax, &integrand);
+    outfile << " " << log10(fabs(result - exact) / fabs(exact));
+
+    result = Milne(Npts, xmin, xmax, &integrand);
+    outfile << " " << log10(fabs(result - exact) / fabs(exact));
+
+    result = GSL_integration(Npts, xmin, xmax, &integrand_with_params);
+    outfile << " " << log10(fabs(result - exact) / fabs(exact));
+
+    outfile << endl;
+  }
+
+  outfile.close();
 
   cout << endl;
   return 0;
@@ -44,18 +61,16 @@ int main()
 
 double integrand(double x)
 {
-  const int order = 1;
-  double sum = 0.;
-  
-  for(int i = 0; i <= order; i++)
-  {
-    sum += pow(x, i);
-  }
-
-  return sum;
+  return exp(x) * cos(x);
 }
 
 double integrand_with_params(double x, void* params)
 {
   return integrand(x);
+}
+
+double exact_antiderivative(double x)
+{
+  double ret = exp(x) * (cos(x) + sin(x)) / 2.;
+  return ret;
 }
