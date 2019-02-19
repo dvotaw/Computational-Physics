@@ -1,0 +1,69 @@
+SHELL=/bin/sh 
+# Programmer:  Daniel Votaw (votaw@nscl.msu.edu)
+# Latest revision: 19-Feb-2019
+#
+#
+# Run with:
+#            make -f make_integration 
+
+# The base for the names.
+BASE=integration
+
+# Source files.
+SRCS= \
+integration_main.cpp \
+integration_functions.cpp \
+
+# Header files.
+HDRS= \
+integration_functions.h
+
+# Input files.
+INPFILE= \
+
+OBJS= $(addsuffix .o, $(basename $(SRCS)))
+MAKEFILE= make_$(BASE)
+COMMAND=  $(BASE).x
+TARFILE= $(BASE).tar.gz
+ZIPFILE= $(BASE).zip
+
+CXX= g++
+CFLAGS=  -g -O3
+CWARNS= -Wall -W -Wshadow -fno-common 
+MOREFLAGS= -Wpedantic -Wpointer-arith -Wcast-qual -Wcast-align \
+           -Wwrite-strings -fshort-enums 
+
+# Libraries and linking.
+LIBS=           
+LDFLAGS= -lgsl -lgslcblas 
+ 
+all:    $(COMMAND) 
+
+.SUFFIXES:
+.SUFFIXES: .o .mod .f90 .f .cpp
+
+$(COMMAND): $(OBJS) $(MAKEFILE) 
+	$(CXX) -o $(COMMAND) $(OBJS) $(LDFLAGS) $(LIBS)
+
+.cpp.o: $(HDRS) $(MAKEFILE)
+	$(CXX) -c $(CFLAGS) $(CWARNS) -o $@ $<
+
+.f90.mod:
+	$(F90) -c $(F90FLAGS) -o $@ $< 
+ 
+.f90.o: 
+	$(F90) -c $(F90FLAGS) -o $@ $<
+ 
+.f.o:   
+	$(F90) -c $(FFLAGS) -o $@ $<
+      
+clean:
+	/bin/rm -f $(COMMAND) $(OBJS)
+	/bin/rm -f $(MODIR)/*.mod
+ 
+tarz:
+	tar cfvz $(TARFILE) $(MAKEFILE) $(SRCS) $(HDRS) $(MODIR) $(INPFILE) 
+
+zip:
+	zip -r $(ZIPFILE) $(MAKEFILE) $(SRCS) $(HDRS) $(MODIR) $(INPFILE) 
+
