@@ -12,7 +12,20 @@
 //      Compile with: 
 //        make -f make_integration 
 //
-//*********************************************************************// 
+//*********************************************************************//
+
+/*-------------------- Answers to questions: --------------------*/
+/*
+For N < ~10^3, the relative error for Simpson's rule appears to obey a power law of the form N^{-4}, meaning that the leading-order algorithm error goes like h^5. This is what I expect from the notes.
+
+For ~10 < N < ~10^2, the relative error for Milne's rule appears to obey a power law of the form N^{-6}, meaning that the leading-order error does like h^7. This is also what I expect from reading about Milne.
+
+For N > ~10^3, both methods obey power laws of the form N^{0.5}, which is consistent with our in-class findings that roundoff errors accumulate as sqrt(N). The minimum relative error for Milne appears to occur
+at approximately N = 10^{2.3}, and for Simpson at about N = 10^{3.3}.
+
+The GSL QAGS integration results in the same result (and therefore error) every time. It's using an adaptive integration algorithm to get a very small error. The "N" that is input to the function is a maximum number of subintervals, so it can choose to use fewer. Naively, I would have expected to get different results for different N, but inputting different values of N to the function doesn't guarantee that it will perform the calculation differently.
+*/
+ 
 #include <iostream>                 // For cout().
 #include <iomanip>                  // For setprecision().
 #include <fstream>                  // For file I/O.
@@ -34,7 +47,7 @@ double exact_antiderivative(double x);
 int main()
 {
   // Define the maximum number of intervals we want to use to calculate the numerical integral.
-  const int max = 1e8;
+  const int max = 1e7;
 
   // Define the output precision so it doesn't have to be changed in multiple places.
   const int OUTPUT_PRECISION = 16;
@@ -58,7 +71,7 @@ int main()
   outfile.open("integration_results.txt");
 
   // Loop over numbers of integration intervals.
-  for(Npts = 10; Npts <= max; Npts *= 10)
+  for(Npts = 10; Npts <= max; Npts *= 2)
   {
     // Print to screen for user-friendliness.
     cout << " Starting " << Npts << " points...\n";

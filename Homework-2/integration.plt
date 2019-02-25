@@ -29,7 +29,7 @@ fit [0:3.5] f1(x) "integration_results.txt" using ($1):($2) via a1,b1
 fit_title1 = sprintf("%-+4.1f*x %-+4.1f",a1,b1)
 
 f2(x) = a2*x + b2
-fit [0:2.5] f2(x) "integration_results.txt" using ($3):($4) via a2,b2 
+fit [1.2:2.5] f2(x) "integration_results.txt" using ($3):($4) via a2,b2 
 fit_title2 = sprintf("%-+4.1f*x %-+4.1f",a2,b2)
 
 # Set terminal type to X11.
