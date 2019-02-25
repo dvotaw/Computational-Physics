@@ -1,0 +1,39 @@
+# HW grading scale: check(+) --> excellent (good code and analysis) 
+#                   check    --> satisfactory (minor shortcomings in code and/or analysis)
+#                   check(-) --> significant problems w/code or analysis
+
+1) Problem 1 (area.cpp embellishments): 
+
+Your code looks great. Nice job covering all possible cases for i/o. 
+
+2)Problem 2 (sum up/down): 
+
+Did you forget to push this code/figure? Oh wait, I see-- 
+roundoff.cpp is the sum problem, and roundoff_distribution.cpp is 
+the extra one.
+
+Ok, in that case your figure looks right and your analysis is correct-- it's 
+just a bit more complicated version of the 1+eps+eps... vs eps + eps +...+1 
+problem we did in class. 
+
+3) Problem 3 (bessel functions): 
+
+Your code looks good and the analysis is on the money (in particular using the gsl 
+result to figure out which is the culprit when the relative difference of the up/down 
+is of order 1.)
+
+(If interested, you can understand numerical value of the slope between x=1 and 10
+using the short-distance x << l expressions of the spherical bessel and neumann functions. See Ch. 4 
+notes. I wonder if one can play similar games for the VERY steep 
+region above x = 30 using the asymptotic x >> l expressions for jl(x) and nl(x).)
+
+
+4) Extra problem (roundoff distribution):
+Yup, that's what I get...not quite Gaussian, and the "not quite" gets more pronounced as I 
+do more points.
+
+
+##### HW grade = check(++). 
+
+Nice job. Your codes are very well written and easy to read,and you hit all the main points 
+asked for in the analysis. 
