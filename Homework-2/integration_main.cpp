@@ -36,6 +36,9 @@ int main()
   // Define the maximum number of intervals we want to use to calculate the numerical integral.
   const int max = 1e8;
 
+  // Define the output precision so it doesn't have to be changed in multiple places.
+  const int OUTPUT_PRECISION = 16;
+
   // Declare a variable to hold the current number of intervals.
   int Npts;
 
@@ -59,23 +62,29 @@ int main()
   {
     // Print to screen for user-friendliness.
     cout << " Starting " << Npts << " points...\n";
-    // Write the number of points to file.
-    outfile << scientific << setprecision(20) << log10(Npts);
 
+    outfile << setprecision(OUTPUT_PRECISION);
+
+    // Write the number of points to file.
+    outfile << fixed << log10(Npts+1);
     // Perform numerical integration using Simpson's rule.
     result = Simpson(Npts+1, xmin, xmax, &integrand);
     // Write to file.
-    outfile << " " << log10(fabs(result - exact) / fabs(exact));
+    outfile << scientific << " " << log10(fabs(result - exact) / fabs(exact)) << " ";
 
+    // Write the number of points to file.
+    outfile << fixed << log10(Npts+5);
     // Perform numerical integral using Milne's rule.
     result = Milne(Npts+5, xmin, xmax, &integrand);
     // Write to file.
-    outfile << " " << log10(fabs(result - exact) / fabs(exact));
+    outfile << scientific << " " << log10(fabs(result - exact) / fabs(exact)) << " ";
 
+    // Write the number of points to file.
+    outfile << fixed << log10(Npts);
     // Perform numerical integral using GSL QAGS.
     result = GSL_integration(Npts, xmin, xmax, &integrand_with_params);
     // Write to file.
-    outfile << " " << log10(fabs(result - exact) / fabs(exact));
+    outfile << scientific << " " << log10(fabs(result - exact) / fabs(exact));
 
     // Newline for readability of output file.
     outfile << endl;
@@ -83,9 +92,6 @@ int main()
 
   // Close the output file.
   outfile.close();
-
-  // Newline on screen for prettiness.
-  cout << endl;
 
   // Return main().
   return 0;
