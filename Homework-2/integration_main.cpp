@@ -7,6 +7,7 @@
 //  Revision history:
 //      19-Feb-2019  Wrote from scratch.
 //      25-Feb-2019  Added some comments.
+//      26-Feb-2019  Added empirical error analysis for bonus question.
 //
 //  Notes: 
 //      Compile with: 
@@ -23,6 +24,8 @@ For ~10 < N < ~10^2, the relative error for Milne's rule appears to obey a power
 For N > ~10^3, both methods obey power laws of the form N^{0.5}, which is consistent with our in-class findings that roundoff errors accumulate as sqrt(N). The minimum relative error for each algorithm occurs at the N where the dominant contribution to the relative error switches from algorithm error to roundoff error. The minimum relative error for Milne appears to occur at approximately N = 10^{2.3}, and for Simpson at about N = 10^{3.3}. As discussed in the notes, the total relative error is the sum of the roundoff contribution and the algorithm contribution, and the minimum relative error occurs when the two terms are roughly equal in magnitude. Assuming the coefficient of the algorithm error is O(1), then the optimum N should go like (1/em)^{2/(2p + 1)}, where p is the power of N in the algorithm error, and em is the machine precision. For Milne, this tells me that the optimum N should be approximately 10^{2.5}, and for Simpson, it shold be 10^{3.6}. These estimates are close to my empirical findings from above.
 
 The GSL QAGS integration results in the same value (and therefore error) every time. It's using an adaptive integration algorithm to get a very small error. The "N" that is input to the function is a maximum number of subintervals, so it can choose to use fewer. Naively, I would have expected to get different results for different N, but inputting different values of N to the function doesn't guarantee that it will perform the calculation differently.
+
+Assuming that the exact answer is not known, errors between different numerical algorithms can still be analyzed. If one algorithm is known to perform better than another (in this case, GSL QAGS > Milne > Simpson), you can compare the results of a lesser algorithm to a better one. In the example below, I calculate relative errors between Simpson and Milne. When I plot their relative error using "empirical_error_analysis.plt", I can fit the results and recover the approximate scaling power of the worse algorithm (in this case, Simpson). I could then compare Milne to GSL QAGS, and calculate the scaling power of Milne as well. If the scaling laws match what I expect from the derivations of the methods, then I have confidence that they are working properly, even if I don't know the exact result of the integral.
 */
  
 #include <iostream>                 // For cout().
@@ -58,8 +61,8 @@ int main()
   const double xmin = 0.;
   const double xmax = 1.;
 
-  // Declare some variables to hold the exact result and the numerical result.
-  double result, exact;
+  // Declare some variables to hold the exact result and the numerical results.
+  double exact, Simpson_result, Milne_result, GSL_result;
 
   // The exact result for the definite integral is the difference of the antiderivatives evaluated at the endpoints.
   exact = exact_antiderivative(xmax) - exact_antiderivative(xmin);
@@ -79,23 +82,28 @@ int main()
     // Write the number of points to file.
     outfile << fixed << log10(Npts+1);
     // Perform numerical integration using Simpson's rule.
-    result = Simpson(Npts+1, xmin, xmax, &integrand);
+    Simpson_result = Simpson(Npts+1, xmin, xmax, &integrand);
     // Write to file.
-    outfile << scientific << " " << log10(fabs(result - exact) / fabs(exact)) << " ";
+    outfile << scientific << " " << log10(fabs(Simpson_result - exact) / fabs(exact)) << " ";
 
     // Write the number of points to file.
     outfile << fixed << log10(Npts+5);
     // Perform numerical integral using Milne's rule.
-    result = Milne(Npts+5, xmin, xmax, &integrand);
+    Milne_result = Milne(Npts+5, xmin, xmax, &integrand);
     // Write to file.
-    outfile << scientific << " " << log10(fabs(result - exact) / fabs(exact)) << " ";
+    outfile << scientific << " " << log10(fabs(Milne_result - exact) / fabs(exact)) << " ";
 
     // Write the number of points to file.
     outfile << fixed << log10(Npts);
     // Perform numerical integral using GSL QAGS.
-    result = GSL_integration(Npts, xmin, xmax, &integrand_with_params);
+    GSL_result = GSL_integration(Npts, xmin, xmax, &integrand_with_params);
     // Write to file.
-    outfile << scientific << " " << log10(fabs(result - exact) / fabs(exact));
+    outfile << scientific << " " << log10(fabs(GSL_result - exact) / fabs(exact)) << " ";
+
+    // Write the number of points to file.
+    outfile << fixed << log10(Npts);
+    // Empirical error analysis between Simpson and Milne.
+    outfile << scientific << " " << log10(2. * fabs(Milne_result - Simpson_result) / fabs(Milne_result + Simpson_result));
 
     // Newline for readability of output file.
     outfile << endl;
