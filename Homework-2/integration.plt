@@ -12,7 +12,7 @@
 set timestamp
 
 # Titles and labels.
-set title 'Numerical integration of exp(x)cos(x) on [0,1]'
+set title 'Double precision numerical integration of exp(x)cos(x) on [0,1]'
 set xlabel 'log10(Number of integration points)'
 set ylabel 'log10(Relative error)'
 
