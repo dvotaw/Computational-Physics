@@ -6,6 +6,7 @@
 //
 //  Revision history:
 //      14-Mar-2019  Wrote from scratch.
+//      18-Mar-2019  Tuning parameters and testing for different dimensions.
 //
 //  Notes:  
 //
@@ -18,10 +19,10 @@
 using namespace std;
 
 // PRNG seed.
-extern const unsigned int SEED = 45835;
+extern const unsigned int SEED = 45967;
 
 // This is the dimension of the space we're minimizing the cost function in.
-extern const int DIM = 6;
+extern const int DIM = 7;
 
 // We'll discretize our steps in units of this.
 extern const double LATTICE_SPACING = 1.0;
@@ -47,10 +48,13 @@ void step(const double* min, const double* max, double* x);
 // Main function.
 int main()
 {
-  // Create an Annealer object and initialize its parameters.
+  /// Create an Annealer object and initialize its parameters.
+  // Algorithm will terminate when we get below this temperature.
   const double Tmin = 1e-9;
-  const double Tmax = 2500;
-  const int Nstays = 10;
+  // Initial temperature.
+  const double Tmax = 2500.;
+  // Condition which must be met for cooling to occur.
+  const int Nstays = 50;
   Annealer A(Tmin, Tmax, Nstays, VERBOSE);
 
   // Define the boundaries of the space we're minimizing the cost function on.
