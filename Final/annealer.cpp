@@ -64,10 +64,10 @@ double Annealer::anneal(const double* min, const double* max, double* x, double 
   // A temporary array to hold the current position while we step to the proposed position.
   double temp[DIM];
 
-  // Initialize the position uniformly over the parameter space.
+  // Initialize the position to some integers, distributed uniformly over the parameter space.
   for(int i = 0; i < DIM; i++)
   {
-    x[i] = min[i] + (max[i] - min[i])*double(rand())/double(RAND_MAX);
+    x[i] = int(min[i] + (max[i] - min[i])*double(rand())/double(RAND_MAX));
   }
 
   /// Begin annealing.

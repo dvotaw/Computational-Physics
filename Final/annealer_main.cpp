@@ -18,13 +18,13 @@
 using namespace std;
 
 // PRNG seed.
-extern const unsigned int SEED = 44235;
+extern const unsigned int SEED = 45835;
 
 // This is the dimension of the space we're minimizing the cost function in.
-extern const int DIM = 4;
+extern const int DIM = 6;
 
 // We'll discretize our steps in units of this.
-extern const double LATTICE_SPACING = 0.1;
+extern const double LATTICE_SPACING = 1.0;
 
 // Flip this Boolean to 1 to see some additional command line output.
 const bool VERBOSE = 0;
@@ -33,7 +33,7 @@ const bool VERBOSE = 0;
 default_random_engine gen(SEED);
 
 // This parametrizes the step size. It will be the sigma of the Gaussian step distribution.
-const double STEP_SIZE = 5.0;
+const double STEP_SIZE = 2.*LATTICE_SPACING;
 // Gaussian distribution with zero mean, will be used for stepping. Step will be a DIM-dimensional, uncorrelated Gaussian function. Other functions could be used instead.
 normal_distribution<double> gaus(0.0, STEP_SIZE);
 
@@ -48,8 +48,8 @@ void step(const double* min, const double* max, double* x);
 int main()
 {
   // Create an Annealer object and initialize its parameters.
-  const double Tmin = 0.000001;
-  const double Tmax = 2500.0;
+  const double Tmin = 1e-9;
+  const double Tmax = 2500;
   const int Nstays = 10;
   Annealer A(Tmin, Tmax, Nstays, VERBOSE);
 
@@ -60,8 +60,8 @@ int main()
   // Set the boundaries.
   for(int i = 0; i < DIM; i++)
   {
-    min[i] = -3.;
-    max[i] = 3.;
+    min[i] = -5.;
+    max[i] = 5.;
   }
 
   // Declare an array to hold the position within the space.
