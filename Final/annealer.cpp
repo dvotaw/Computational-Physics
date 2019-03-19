@@ -6,6 +6,7 @@
 //
 //  Revision history:
 //      14-Mar-2019  Wrote from scratch.
+//      19-Mar-2019  Added capability for adaptive accept/reject criteria. Hoping to improve convergence at low dimensions.
 //
 //  Notes:  
 //
@@ -23,12 +24,12 @@ extern const int DIM;
 extern const double LATTICE_SPACING;
 
 // Annealer class constructor.
-Annealer::Annealer(const double Tmin, const double Tmax, const int Nstays, const bool verbosity)
+Annealer::Annealer(const double Tmin, const double Tmax, const int Nstays_init, const bool verbosity)
 {
   cout << "\n Initializing annealer.\n";
   T_min = Tmin;
   T = T_max = Tmax;
-  N_stays = Nstays;
+  N_stays = Nstays_init;
   VERBOSE = verbosity;
   count = 0;
   N_rej = 0;
@@ -41,12 +42,18 @@ Annealer::~Annealer()
 }
 
 // Annealer cooling schedule.
-double Annealer::cooling_schedule(double T_old)
+void Annealer::cooling_schedule(double T_old)
 {
   // Implementing a linear cooling schedule with some cooling rate (must be less than 1).
   const double cooling_rate = 0.9;
-  T = cooling_rate * T_old;
-  return T;
+  T = cooling_rate*T_old;
+}
+
+// Adapting the condition for cooling. We want to increase the required number of consecutive rejections as a function of Monte Carlo time.
+void Annealer::adapt_rejection(int Nstays_old)
+{
+  const int adaptation = 1;
+  N_stays = Nstays_old + adaptation;
 }
 
 // The annealing function.
@@ -120,8 +127,11 @@ double Annealer::anneal(const double* min, const double* max, double* x, double 
     // Tell the user that cooling is occurring.
     cout << "\n  After " << count << " iterations, cooling from T = " << T << " to";
     // Cool.
-    T = cooling_schedule(T);
-    cout << " T = " << T << ".\n";
+    cooling_schedule(T);
+    cout << " T = " << T << ", and adapting from Nstays = " << N_stays << " to";
+    // Adapt rejection requirement.
+    adapt_rejection(N_stays);
+    cout << " Nstays = " << N_stays << ".\n";
     // Reset the number of consecutive rejections.
     N_rej = 0;
   }

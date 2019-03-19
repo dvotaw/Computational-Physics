@@ -17,12 +17,14 @@ class Annealer
 {
   public:
     // Constructor
-    Annealer(const double Tmin, const double Tmax, const int Nstays, const bool verbosity);
+    Annealer(const double Tmin, const double Tmax, const int Nstays_init, const bool verbosity);
     // Destructor
     ~Annealer();
 
     // The cooling schedule of the algorithm.
-    double cooling_schedule(double T_old);
+    void cooling_schedule(double T_old);
+
+    void adapt_rejection(int Nstays_old);
 
     // Simulated annealing function.
     double anneal(const double* min, const double* max, double* x, double (*cost)(double*), void (*step)(const double*, const double*, double*));

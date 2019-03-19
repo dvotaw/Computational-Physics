@@ -12,14 +12,15 @@
 //
 //*********************************************************************//
 #include <iostream>   // For cout().
+#include <fstream>    // For file I/O.
 #include <random>     // For Gaussian distribution.
-#include <time.h>     // For clock.
+#include <time.h>     // For clock().
 #include "annealer.h" // For Annealer class.
 
 using namespace std;
 
 // PRNG seed.
-extern const unsigned int SEED = 45967;
+extern const unsigned int SEED = 775975;
 
 // This is the dimension of the space we're minimizing the cost function in.
 extern const int DIM = 7;
@@ -50,12 +51,12 @@ int main()
 {
   /// Create an Annealer object and initialize its parameters.
   // Algorithm will terminate when we get below this temperature.
-  const double Tmin = 1e-9;
+  const double Tmin = 1e-12;
   // Initial temperature.
-  const double Tmax = 2500.;
+  const double Tmax = 2600.;
   // Condition which must be met for cooling to occur.
-  const int Nstays = 50;
-  Annealer A(Tmin, Tmax, Nstays, VERBOSE);
+  const int Nstays_init = 5*DIM;
+  Annealer A(Tmin, Tmax, Nstays_init, VERBOSE);
 
   // Define the boundaries of the space we're minimizing the cost function on.
   double min[DIM];
@@ -88,8 +89,18 @@ int main()
     volume *= int((max[i] - min[i])/LATTICE_SPACING);
   }
 
+  // Fraction of space we covered in the annealing process. In units of percent.
+  double frac = 100.*double(counter)/double(volume);
+  // How long the annealer took to converge. In units of seconds.
+  double time = double(t)/double(CLOCKS_PER_SEC);
+
   // Some figures of merit.
-  cout << "\n Looped over " << 100.*double(counter)/double(volume) << "% of the search space in " << double(t)/double(CLOCKS_PER_SEC) << " seconds.\n";
+  cout << "\n Looped over " << frac << "% of the search space in " << time << " seconds.\n";
+
+  // Write to file for plotting.
+  ofstream fout;
+  fout.open("results.txt", ios::out | ios::app);
+  fout << DIM << " " << frac << " " << time << "\n";
 
   // Return.
   return 0;
