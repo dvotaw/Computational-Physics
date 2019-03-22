@@ -7,6 +7,7 @@
 //  Revision history:
 //      14-Mar-2019  Wrote from scratch.
 //      18-Mar-2019  Tuning parameters and testing for different dimensions.
+//      22-Mar-2019  Used time() to generate unique PRNG seed rather than simply hard-coding it.
 //
 //  Notes:  
 //
@@ -20,7 +21,7 @@
 using namespace std;
 
 // PRNG seed.
-extern const unsigned int SEED = 775975;
+extern const unsigned int SEED = time(NULL);
 
 // This is the dimension of the space we're minimizing the cost function in.
 extern const int DIM = 7;
@@ -35,7 +36,7 @@ const bool VERBOSE = 0;
 default_random_engine gen(SEED);
 
 // This parametrizes the step size. It will be the sigma of the Gaussian step distribution.
-const double STEP_SIZE = 2.*LATTICE_SPACING;
+const double STEP_SIZE = 3.*LATTICE_SPACING;
 // Gaussian distribution with zero mean, will be used for stepping. Step will be a DIM-dimensional, uncorrelated Gaussian function. Other functions could be used instead.
 normal_distribution<double> gaus(0.0, STEP_SIZE);
 
