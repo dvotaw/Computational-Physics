@@ -52,11 +52,11 @@ int main()
 {
   /// Create an Annealer object and initialize its parameters.
   // Algorithm will terminate when we get below this temperature.
-  const double Tmin = 1e-12;
+  const double Tmin = 1e-5;
   // Initial temperature.
-  const double Tmax = 2600.;
+  const double Tmax = 2500.;
   // Condition which must be met for cooling to occur.
-  const int Nstays_init = 5*DIM;
+  const int Nstays_init = 3*DIM;
   Annealer A(Tmin, Tmax, Nstays_init, VERBOSE);
 
   // Define the boundaries of the space we're minimizing the cost function on.

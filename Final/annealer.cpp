@@ -45,7 +45,7 @@ Annealer::~Annealer()
 void Annealer::cooling_schedule(double T_old)
 {
   // Implementing a linear cooling schedule with some cooling rate (must be less than 1).
-  const double cooling_rate = 0.9;
+  const double cooling_rate = 0.99;
   T = cooling_rate*T_old;
 }
 
