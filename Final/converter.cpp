@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
     fin[i].open(buf, ios::in);
 
     // Check that the file exists.
-    if(!fin[i].good()) { cerr << "\n I didn't find file " << i << "! Aborting calculation.\n"; return 1; }
+    if(!fin[i].good()) { cerr << "\n I didn't find file " << i << "! Aborting calculation.\n" << endl; return 1; }
 
     // Loop over the 5 lines that I assume it contains.
     for(int j = 0; j < nRows; ++j)
