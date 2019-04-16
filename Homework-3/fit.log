@@ -1219,3 +1219,40 @@ correlation matrix of the fit parameters:
                 a      b      
 a               1.000 
 b              -0.785  1.000 
+
+
+*******************************************************************************
+Tue Mar 26 13:06:08 2019
+
+
+FIT:    data read from "wavefunction_evaluation.dat" using ($1):($2)
+        format = x:z
+        x range restricted to [0.00000 : 21.0000]
+        #datapoints = 4
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x) = a*x + b
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b            
+   0 5.1057243357e+04   0.00e+00  8.14e+00    1.000000e+00   1.000000e+00
+   5 2.6576152393e+01  -4.22e-07  8.14e-05   -4.447171e+00   1.561341e+02
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 26.5762
+rel. change during last iteration : -4.22257e-12
+
+degrees of freedom    (FIT_NDF)                        : 2
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 3.64528
+variance of residuals (reduced chisquare) = WSSR/ndf   : 13.2881
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = -4.44717         +/- 0.2565       (5.767%)
+b               = 156.134          +/- 2.941        (1.884%)
+
+correlation matrix of the fit parameters:
+                a      b      
+a               1.000 
+b              -0.785  1.000 

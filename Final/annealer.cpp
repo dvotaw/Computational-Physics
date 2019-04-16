@@ -52,7 +52,7 @@ void Annealer::cooling_schedule(double T_old)
 // Adapting the condition for cooling. We want to increase the required number of consecutive rejections as a function of Monte Carlo time.
 void Annealer::adapt_rejection(int Nstays_old)
 {
-  const int adaptation = 1;
+  const int adaptation = 0; // 1;
   N_stays = Nstays_old + adaptation;
 }
 

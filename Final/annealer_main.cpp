@@ -36,7 +36,7 @@ const bool VERBOSE = 0;
 default_random_engine gen(SEED);
 
 // This parametrizes the step size. It will be the sigma of the Gaussian step distribution.
-const double STEP_SIZE = 3.*LATTICE_SPACING;
+const double STEP_SIZE = 3./LATTICE_SPACING;
 // Gaussian distribution with zero mean, will be used for stepping. Step will be a DIM-dimensional, uncorrelated Gaussian function. Other functions could be used instead.
 normal_distribution<double> gaus(0.0, STEP_SIZE);
 
