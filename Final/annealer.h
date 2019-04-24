@@ -24,6 +24,7 @@ class Annealer
     // The cooling schedule of the algorithm.
     void cooling_schedule(double T_old);
 
+    // Adaptation function.
     void adapt_rejection(int Nstays_old);
 
     // Simulated annealing function.

@@ -52,7 +52,12 @@ void Annealer::cooling_schedule(double T_old)
 // Adapting the condition for cooling. We want to increase the required number of consecutive rejections as a function of Monte Carlo time.
 void Annealer::adapt_rejection(int Nstays_old)
 {
-  const int adaptation = 0; // 1;
+  // Initialize the adaptation, which is just some integer added to the cooling criterion. If you leave it at zero, you turn off adaptation.
+  int adaptation = 0;
+  // We can play with different functions here. Can just let Nstays evolve according to some fixed schedule, or can make it adapt based on acceptance ratio.
+  int ratio = int(log10(T_max/T));
+  // Try increasing Nstays by a few each time the algorithm cools, up to a certain point.
+  adaptation = ratio*(ratio < 4);
   N_stays = Nstays_old + adaptation;
 }
 
@@ -76,6 +81,9 @@ double Annealer::anneal(const double* min, const double* max, double* x, double 
   {
     x[i] = int(min[i] + (max[i] - min[i])*double(rand())/double(RAND_MAX));
   }
+
+  // Calculate the cost at the first point.
+  current_value = cost(x);
 
   /// Begin annealing.
   // Keep going until we reach the minimum temperature.
@@ -105,6 +113,7 @@ double Annealer::anneal(const double* min, const double* max, double* x, double 
         {
           N_rej++;
           if(VERBOSE) { cout << "\n   Difference: " << diff << ". Found a worse value, staying."; }
+          // Copy the old values back.
           for(int i = 0; i < DIM; i++) { x[i] = temp[i]; }
         } 
       }
@@ -121,7 +130,7 @@ double Annealer::anneal(const double* min, const double* max, double* x, double 
         cout << ".\n";
       }
 
-      // Increment the counter.
+      // Increment the overall counter. We'll use this to keep track of the fraction of the volume we iterate over.
       count++;
     }
     // Tell the user that cooling is occurring.

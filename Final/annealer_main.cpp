@@ -103,14 +103,14 @@ int main()
   fout.open("results.txt", ios::out | ios::app);
   fout << DIM << " " << frac << " " << time << "\n";
 
-  // Return.
+  // Return main().
   return 0;
 }
 
 // This is the cost function. I'll use a Rosenbrock function in DIM dimensions. 
 double cost(double* x)
 {
-  double ret = 0;
+  double ret = 0.;
   for(int i = 0; i < DIM - 1; i++)
   {
     ret += 100.*sqr(x[i+1] - sqr(x[i])) + sqr(1. - x[i]);
