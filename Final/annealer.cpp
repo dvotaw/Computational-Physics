@@ -6,7 +6,8 @@
 //
 //  Revision history:
 //      14-Mar-2019  Wrote from scratch.
-//      19-Mar-2019  Added capability for adaptive accept/reject criteria. Hoping to improve convergence at low dimensions.
+//      19-Mar-2019  Added capability for adaptive accept/reject criteria. Hoping to improve the likelihood of convergence to global minimum.
+//      24-Apr-2019  Played with adaptation function.
 //
 //  Notes:  
 //
@@ -33,6 +34,8 @@ Annealer::Annealer(const double Tmin, const double Tmax, const int Nstays_init, 
   VERBOSE = verbosity;
   count = 0;
   N_rej = 0;
+  N_acc = 0;
+  acceptance = 0.;
 }
 
 // Annealer class destructor.
@@ -52,12 +55,30 @@ void Annealer::cooling_schedule(double T_old)
 // Adapting the condition for cooling. We want to increase the required number of consecutive rejections as a function of Monte Carlo time.
 void Annealer::adapt_rejection(int Nstays_old)
 {
+  // How many times have we adapted?
+  static int n = 0;
+  static int m = 0;
+
   // Initialize the adaptation, which is just some integer added to the cooling criterion. If you leave it at zero, you turn off adaptation.
   int adaptation = 0;
-  // We can play with different functions here. Can just let Nstays evolve according to some fixed schedule, or can make it adapt based on acceptance ratio.
-  int ratio = int(log10(T_max/T));
-  // Try increasing Nstays by a few each time the algorithm cools, up to a certain point.
-  adaptation = ratio*(ratio < 4);
+
+  /// We can play with different functions here. Can just let Nstays evolve according to some fixed schedule, and/or can make it adapt based on acceptance ratio.
+  // Try incrementing the cooling criterion every once in a while according to a deterministic schedule.
+  int rn = int(log(T_max/T));
+  if(n <= rn)
+  {
+    adaptation += rn;
+    n++;
+  }
+
+  // Try incrementing based on acceptance ratio.
+  int rm = int(log(1000./acceptance));
+  if(m <= rm)
+  {
+    adaptation += rm;
+    m++;
+  }
+
   N_stays = Nstays_old + adaptation;
 }
 
@@ -103,11 +124,11 @@ double Annealer::anneal(const double* min, const double* max, double* x, double 
       diff = proposed_value - current_value;
 
       // If we find a better value, take it.
-      if(diff <= 0) { current_value = proposed_value; N_rej = 0; if(VERBOSE) { cout << "\n   Difference: " << diff << ". Found a better value, moving."; } }
+      if(diff <= 0) { current_value = proposed_value; N_rej = 0; N_acc++; if(VERBOSE) { cout << "\n   Difference: " << diff << ". Found a better value, moving."; } }
       else
       {
         // If we find a worse value, take it anyway with a temperature-dependent probability.
-        if(double(rand())/double(RAND_MAX) < exp(-diff/T)) { current_value = proposed_value; N_rej = 0; if(VERBOSE) { cout << "\n   Difference: " << diff << ". Found a worse value, moving."; } }
+        if(double(rand())/double(RAND_MAX) < exp(-diff/T)) { current_value = proposed_value; N_rej = 0; N_acc++; if(VERBOSE) { cout << "\n   Difference: " << diff << ". Found a worse value, moving."; } }
         // Or remain at the current point.
         else 
         {
@@ -118,20 +139,23 @@ double Annealer::anneal(const double* min, const double* max, double* x, double 
         } 
       }
 
+      // Increment the overall counter. We'll use this to keep track of the fraction of the volume we iterate over.
+      count++;
+
+      // Calculate the acceptance.
+      acceptance = double(N_acc)/double(count);
+
       // Show current temperature and position if verbosity is turned on.
       if(VERBOSE)
       {
-        cout << " T: " << T << " x: <";
+        cout << " T: " << T << ", x: <";
         for(int i = 0; i < DIM; i++)
         {
           if(i != DIM - 1) { cout << x[i] << ","; }
-          else { cout << x[i] << ">"; }
+          else { cout << x[i] << ">, "; }
         }
-        cout << ".\n";
+        cout << "Acceptance: " << acceptance << ".\n";
       }
-
-      // Increment the overall counter. We'll use this to keep track of the fraction of the volume we iterate over.
-      count++;
     }
     // Tell the user that cooling is occurring.
     cout << "\n  After " << count << " iterations, cooling from T = " << T << " to";

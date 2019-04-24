@@ -41,6 +41,10 @@ class Annealer
     int N_stays;
     // Current number of consecutive rejections.
     int N_rej;
+    // Total number of accepted moves.
+    int N_acc;
+    // Acceptance ratio.
+    double acceptance;
     // Generic counter.
     int count;
     // Verbosity.
