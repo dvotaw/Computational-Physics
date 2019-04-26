@@ -23,7 +23,7 @@ using namespace std;
 // Main function.
 int main(int argc, char* argv[])
 {
-  // This is the number of results_x.txt files that we want to combine. Naming convention starts from x = 0 to (N - 1).
+  // This is the number of results_i.txt files that we want to combine. Naming convention starts from i = 0 to (N - 1).
   int N = 0;
 
   // C-String buffer.
@@ -50,9 +50,8 @@ int main(int argc, char* argv[])
   // Loop over files and average their results. This is a Monte Carlo algorithm, so the results for each individual run are random variables.
   for(int i = 0; i < N; ++i)
   {
-    // Generate the file name.
+    // Generate the file name, and open the file.
     sprintf(buf, "results_%i.txt", i);
-    // Open the file.
     fin[i].open(buf, ios::in);
 
     // Check that the file exists.
