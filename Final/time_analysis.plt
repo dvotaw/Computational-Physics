@@ -12,7 +12,7 @@
 set timestamp
 
 # Titles and labels.
-set title 'Timme analysis for simulated annealing'
+set title 'Time analysis for simulated annealing'
 set xlabel 'log10(Dimension)'
 set ylabel 'log10(Wall time to convergence [sec])'
 
